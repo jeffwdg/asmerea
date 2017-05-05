@@ -1,0 +1,13 @@
+applications:
+- services:
+#  - Visual Recognition-0h
+  - Visual Recognition-2q
+- path: .
+  memory: 256M
+  instances: 1
+  domain: mybluemix.net
+  name: horus
+  host: horus
+#  name: asmerea
+#  host: asmerea
+  disk_quota: 1024M

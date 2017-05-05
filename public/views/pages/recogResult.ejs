@@ -1,0 +1,14 @@
+<h3>Recognition results</h3>
+
+<img alt="" class="post-img" id="pImage_0" style="heigh:300" src='<%= images[0].source_url %>' />
+
+<% for(var i=0; i< images[0].classifiers[0].classes.length; i++) { %>
+       <li>
+           <div class="post_image">
+             <a class="post" >
+               <a><p><%= images[0].classifiers[0].classes[i].class %></p></a>
+               <a><p><%= images[0].classifiers[0].classes[i].score %></p></a>
+            </a>
+           </div>
+       </li>
+   <% } %>

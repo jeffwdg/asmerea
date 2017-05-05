@@ -1,0 +1,20 @@
+
+<img alt="" class="post-img" id="pImage_0" style="heigh:300" src='<%= data[0].user.profile_picture %>' />
+<a><h2><%= data[0].user.username %></h2></a>
+<a><h3><%= data[0].user.full_name %></h3></a>
+
+
+<% for(var i=0; i< data.length; i++) { %>
+       <li>
+
+           <div class="post_image">
+          <a class="post" href="<%= data[i].link %>">
+           <img alt="" class="post-img" id="pImage_0" style="heigh:400" src='<%= data[i].images.standard_resolution.url %>' />
+          </a>
+           <p><%= data[i].caption.text %></p>
+           <p><b><%= data[i].likes.count %> </b> Likes</p>
+           <p><b><%= data[i].comments.count %> </b> Comments</p>
+           </div>
+
+       </li>
+   <% } %>
