@@ -51,6 +51,12 @@ instagram.use({
 });
 */
 
+var text_to_speech = new TextToSpeechV1({
+  username: 'b189e628-3409-48f5-8020-c6baf9d417a3',
+  password: '7PjferYWBmOF'
+});
+
+
 var visual_recognition = watson.visual_recognition({
   api_key: '5cfe8a848c2360730df7c59678b0dc103cae7630', // '0aa92f543e38547ddc8ba9383caf4cba952dbb32',
   version: 'v3',
@@ -66,33 +72,6 @@ var instaImage ="https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e
 // ================================================================
 
 var redirect_uri = 'https://horus.mybluemix.net/loginsuccess';
-/*
-exports.authorize_user = function(req, res) {
-  res.redirect(instagram.get_authorization_url(redirect_uri, { scope: ['likes'], state: null }));
-
-};
-
-exports.loginsuccess = function(req, res) {
-  console.log(req.query.access_token);
-
-  instagram.authorize_user(req.query.token, redirect_uri, function(err, result) {
-    if (err) {
-      console.log(err.body);
-      res.send("Didn't work");
-    } else {
-      console.log('Yay! Access token is ' + result.access_token);
-      res.send('You made it!!');
-    }
-  });
-
-
-};*/
-
-// This is where you would initially send users to authorize
-//app.get('/authorize_user', exports.authorize_user);
-// This is your redirect URI
-//app.get('/loginsuccess', exports.loginsuccess);
-
 
 app.get('/', function(req, res) {
   console.log(req.query);
@@ -124,12 +103,11 @@ app.get('/speak', function(req, res) {
   };
 
   // Pipe the synthesized text to a file
-  text_to_speech.synthesize(params).pipe(fs.createWriteStream('output.wav'));
+  text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/output.wav'));
   console.log();
 
   res.render('pages/index');
 });
-
 
 app.get('/loginsuccess4', function(req, res){
   console.log("Enter now");
@@ -171,7 +149,7 @@ app.get('/loginsuccess4', function(req, res){
 });
 
 app.get('/feed', function(req, res, next){
-  var url = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=1378545447.4d4215d.b9522a4927564793b88828b33a32c4e3&count=10';
+  var url = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=1378545447.4d4215d.b9522a4927564793b88828b33a32c4e3&count=5';
   var jsodata;
 
   request({url: url , json: true}, function(err, res, json) {
@@ -190,9 +168,6 @@ app.get('/feed', function(req, res, next){
 
     //Loop each fetched posts and recognize the images
     // Append the results in the output array
-
-
-
     //Returns class of the image after recognition
     var getImgClass = function(url,callback) {
       //var url = "https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/18252117_808607632624658_991581406024957952_n.jpg";
@@ -248,6 +223,7 @@ app.get('/feed', function(req, res, next){
 
       console.log("Recognizing each posts of "+json.data.length);
       var iclass=[];
+      var instaAudioText = [];
       iclass.length = json.data.length;
 
        for(var i=0; i < json.data.length; i++){
@@ -256,8 +232,13 @@ app.get('/feed', function(req, res, next){
         //iclass[i] = recognizeImage(json.data[i].images.standard_resolution.url);
         recogImg(url, function(data){
             console.log("FINAL CLASS"+data.images[0].classifiers[0].classes[0].class);
-            iclass[i] = data.images[0].classifiers[0].classes[0].score;
-            console.log("ICLASS"+iclass[i]);
+            iclass[i] = JSON.stringify(data.images[0].classifiers[0].classes);
+            /*
+            instaAudioText[i] = "This post contains " + data.images[0].classifiers[0].classes[0].class + data.images[0].classifiers[0].classes[1].class + "Caption" + data.caption.text
+            + "The post has "+ data.likes.count + " Likes and " + data.comments.count + " comments";
+            createAudo(instaAudioText[i], "audio"+data.id);*/
+            //json.data[0].attribution = data.images[0].classifiers[0].classes
+            console.log("ICLASS"+ data.images[0].classifiers[0].classes);
             data.attribution = data.images[0].classifiers[0];
             //data.attribution = data.images[0].classifiers[0].classes[0].class + " - " + data.images[0].classifiers[0].classes[0].score;
             //console.log(data);
@@ -273,7 +254,7 @@ app.get('/feed', function(req, res, next){
         console.log(JSON.stringify(iclass[i]));
       }
 
-      //console.log(json);
+      console.log(json);
       return json;
       //console.log("RESULT ARRAY "+iclass);
     }
@@ -301,11 +282,9 @@ app.get('/recog', function(req, res) {
 });
 
 
-
 /* Recognize an image */
 app.post('/rec',   function(req, res) {
   var url = "https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/18252117_808607632624658_991581406024957952_n.jpg";
-
   var params = {
     url: url,
     images_file: null
@@ -374,6 +353,19 @@ app.post('/rec',   function(req, res) {
 // FUNCTIONS
 // ================================================================
 
+function createAudo(instatext, filename){
+
+    var params = {
+      text: instatext,
+      voice: 'en-US_AllisonVoice', // Optional voice
+      accept: 'audio/wav'
+    };
+    var filename = "instaaudio";
+    // Pipe the synthesized text to a file
+    text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/'+ filename+'.wav'));
+    console.log();
+
+}
 
 
 
