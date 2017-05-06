@@ -15,6 +15,8 @@ var request = require('request');
 var url = require('url');
 var bodyParser = require('body-parser');
 var watson = require('watson-developer-cloud');
+var instagram = require('instagram-node').instagram();
+
 //var fs = require('fs');
 //var routes = require('../routes/index.js');
 
@@ -41,6 +43,12 @@ var oaccess_token = "";
 // ================================================================
 // WATSON CREDENTIALS HERE
 // ================================================================
+/*
+instagram.use({
+  client_id: '4d4215dd28de4c0fbcc1c4aa8366a926',
+  client_secret: '84f0af4d4c5244eeaed53aeb2c1cfc21'
+});
+*/
 
 var visual_recognition = watson.visual_recognition({
   api_key: '5cfe8a848c2360730df7c59678b0dc103cae7630', // '0aa92f543e38547ddc8ba9383caf4cba952dbb32',
@@ -56,21 +64,53 @@ var instaImage ="https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e
 // GET AND POSTS REQUESTS
 // ================================================================
 
+var redirect_uri = 'https://horus.mybluemix.net/loginsuccess';
+/*
+exports.authorize_user = function(req, res) {
+  res.redirect(instagram.get_authorization_url(redirect_uri, { scope: ['likes'], state: null }));
+
+};
+
+exports.loginsuccess = function(req, res) {
+  console.log(req.query.access_token);
+
+  instagram.authorize_user(req.query.token, redirect_uri, function(err, result) {
+    if (err) {
+      console.log(err.body);
+      res.send("Didn't work");
+    } else {
+      console.log('Yay! Access token is ' + result.access_token);
+      res.send('You made it!!');
+    }
+  });
+
+
+};*/
+
+// This is where you would initially send users to authorize
+//app.get('/authorize_user', exports.authorize_user);
+// This is your redirect URI
+//app.get('/loginsuccess', exports.loginsuccess);
+
+
 app.get('/', function(req, res) {
+  console.log(req.query);
+  //res.send(req.url+req.query+req.params;
   res.render('pages/index');
+
+});
+
+app.get('/loginsuccess', function(req, res) {
+  console.log(req.query);
+  //res.send(req.url+req.query+req.params;
+  //res.render('pages/index');
 });
 
 app.get('/posts', function(req, res) {
   res.render('pages/posts');
 });
 
-app.get('/loginsuccess', function(req, res) {
 
-  var u = window.location.href;
-  console.log(u);
-  res.render('pages/index');
-
-});
 
 app.get('/loginsuccess4', function(req, res){
   console.log("Enter now");
@@ -114,7 +154,8 @@ app.get('/loginsuccess4', function(req, res){
 app.get('/feed', function(req, res, next){
   var url = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=1378545447.4d4215d.b9522a4927564793b88828b33a32c4e3&count=10';
   var jsodata;
-   request({url: url , json: true}, function(err, res, json) {
+
+  request({url: url , json: true}, function(err, res, json) {
      if (err) {
        throw err;
        console.log("Error occured");
@@ -126,7 +167,96 @@ app.get('/feed', function(req, res, next){
 
   function getdata(json){
     console.log("data passed");
-    //console.log(json);
+    //console.log(JSON.stringify(json));
+
+    //Loop each fetched posts and recognize the images
+    // Append the results in the output array
+
+
+
+    //Returns class of the image after recognition
+    var getImgClass = function(url,callback) {
+      //var url = "https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/18252117_808607632624658_991581406024957952_n.jpg";
+      console.log("URL"+url);
+
+      var params = {
+        url: url,
+        images_file: null
+      };
+
+      //Detect images
+      visual_recognition.classify(params, function(err, res) {
+        if (err)
+          console.log(err);
+        else
+          getdata(res);
+          //res.images[0].classifiers[0].classes.sort();
+          var score = res.images[0].classifiers[0].classes[0].score;
+          var iclass = res.images[0].classifiers[0].classes[0].class;
+          console.log("SIZE"+res.images[0].classifiers[0].classes.length);
+          console.log("CLASS"+res.images[0].classifiers[0].classes[0].class);
+          console.log("SCORE"+res.images[0].classifiers[0].classes[0].score);
+          //console.log("Images: "+JSON.stringify(res, null, 2));
+          //console.log(res);
+          callback(res);
+          //return res.images[0].classifiers[0].classes[0].class;
+      });
+
+
+      function getdata(json){
+        console.log("data passed");
+        //console.log(json);
+        //res.setHeader('Content-Type', 'text/html');
+        //res.send(JSON.stringify(json));
+        //res.render('pages/recogResult', json);
+        console.log("end");
+      }
+
+    };
+
+    //Loops through each image for recognition
+    var recogImg = function(url, callback) {
+        console.log("Recognizing each");
+        getImgClass(url,function(data){
+            callback(data);
+        });
+
+    };
+
+    var json = retResults(json);
+
+    function retResults(json){
+
+      console.log("Recognizing each posts of "+json.data.length);
+      var iclass=[];
+      iclass.length = json.data.length;
+
+       for(var i=0; i < json.data.length; i++){
+        //console.log(json.data[i].images.standard_resolution.url);
+        url = json.data[i].images.standard_resolution.url;
+        //iclass[i] = recognizeImage(json.data[i].images.standard_resolution.url);
+        recogImg(url, function(data){
+            console.log("FINAL CLASS"+data.images[0].classifiers[0].classes[0].class);
+            iclass[i] = data.images[0].classifiers[0].classes[0].score;
+
+            data.attribution = data.images[0].classifiers[0];
+            //data.attribution = data.images[0].classifiers[0].classes[0].class + " - " + data.images[0].classifiers[0].classes[0].score;
+            //console.log(data);
+        });
+        iclass.sort();
+        console.log(iclass);
+
+      }
+      //console.log(json);
+      return json;
+      //console.log("RESULT ARRAY "+iclass);
+    }
+
+    /*Looping results of the recognition
+    for(var i=0; i < iclass.length; i++){
+           console.log("Results of the photo recognition class="+ iclass[i]);
+    } */
+
     //app.render('pages/posts', json);
     //res.setHeader('Content-Type', 'text/html');
     //res.send(JSON.stringify(json));
@@ -134,6 +264,8 @@ app.get('/feed', function(req, res, next){
 
     console.log("end");
   }
+
+
 });
 
 app.get('/recog', function(req, res) {
@@ -184,7 +316,7 @@ app.post('/rec',   function(req, res) {
       console.log("SIZE"+res.images[0].classifiers[0].classes.length);
       console.log("CLASS"+res.images[0].classifiers[0].classes[0].class);
       console.log("SCORE"+res.images[0].classifiers[0].classes[0].score);
-      console.log("Images: "+JSON.stringify(res, null, 2));
+      //console.log("Images: "+JSON.stringify(res, null, 2));
   });
 
   //Detect faces
@@ -216,10 +348,6 @@ app.post('/rec',   function(req, res) {
 // FUNCTIONS
 // ================================================================
 
-
-function recognizeImage(instaImage){
-
-}
 
 
 

@@ -7,25 +7,53 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="public/stylesheets/style.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   </head>
 
   <body>
-    <div class = "container">
-    <div class = "banner">
-      <p class = "appTitle">
-        Welcome to Asmerea
-      </p>
-      <div style="text-align:center;  ">
-          <a class="btn-instagram" href="https://www.instagram.com/oauth/authorize/?client_id=4d4215dd28de4c0fbcc1c4aa8366a926&redirect_uri=https://asmerea.mybluemix.net/loginsuccess&response_type=token">
-            <b>Sign in</b> with Instagram
-        	</a>
 
-      </div>
+
+    <div class = "container col-md-12">
+        <div class="col-md-4">
+          </div>
+      <div class="col-md-4">
+          <form class="form-signin" action="https://api.instagram.com/oauth/authorize/?" method="GET">
+            <h2 class="form-signin-heading">Welcome to HORUS</h2>
+            <br>
+            <h4 class="form-signin-heading">Please sign in</h4>
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address"  autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password"  >
+           <input type="hidden" name="redirect_uri" class="form-control" value="https://horus.mybluemix.net/loginsuccess"  >
+           <input type="hidden" name="client_id" class="form-control"    value="4d4215dd28de4c0fbcc1c4aa8366a926" >
+           <input type="hidden" name="response_type" class="form-control" value="token">
+           <input type="hidden" id="access_token" class="form-control" value="" >
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="remember-me"> Remember me
+              </label>
+            </div>
+
+            <input type="submit" class="btn-instagram" value="Sign in with Instagram" />
+
+          </form>
     </div>
-    <script type="text/javascript">
-    var url = window.location.href;
-    console.log(url);
-    </script>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="public/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+
+    $( document ).ready(function() {
+
+
+    });
+
+
+    </script>
   </body>
 </html>

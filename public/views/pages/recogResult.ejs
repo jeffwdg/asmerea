@@ -1,6 +1,10 @@
-<h3>Recognition results</h3>
+<link rel="stylesheet" href="public/stylesheets/bootstrap.min.css">
+<div class="panel-body">
+<div class="row">
+  <h3>Recognition results</h3>
 
 <img alt="" class="post-img" id="pImage_0" style="heigh:300" src='<%= images[0].source_url %>' />
+
 
 <% for(var i=0; i< images[0].classifiers[0].classes.length; i++) { %>
        <li>
@@ -12,3 +16,5 @@
            </div>
        </li>
    <% } %>
+  </div>
+  </div>
