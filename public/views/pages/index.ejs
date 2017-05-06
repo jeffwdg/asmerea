@@ -7,21 +7,146 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="public/stylesheets/style.css">
-    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <!-- BootStrap Start -->
+    <link rel="stylesheet"href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/my-styles.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <!-- BootStrap End -->
+
+    <style>
+      body{
+        background-color: #eff2f7;
+         padding: 50px;
+      }
+      .welcome{
+        margin: auto !important;
+        width: 50%;
+        padding: 50px;
+        font-family: "Monotype Corsiva",sans-serif;
+        font-size: 70px;
+        font-weight: 200;
+      }
+      .icon-circle .fa{
+          font-size           : 25px;
+          color               : grey;
+          margin              : 0 auto;
+          height              : 80px;
+          width               : 80px;
+          border-radius       : 50%;
+          border              :2px solid #e84700;
+          line-height         : 80px;
+          cursor              : pointer;
+          -webkit-transition  : all  ease-in-out 0.35s;
+          -moz-transition     : all  ease-in-out 0.35s;
+          -o-transition       : all  ease-in-out 0.35s;
+          -ms-transition      : all  ease-in-out 0.35s;
+          transition          : all  ease-in-out 0.20s,background-color ease-in-out 0.05s;
+      }
+      .icon-circle  .fa:hover{
+          background-color        : #e84700;
+          color                   : #fff;
+          border                  : 1px solid #e84711;
+          -moz-box-shadow         : inset 0px 0px 0px 5px #ffffff;
+          -o-box-shadow           : inset 0px 0px 0px 5px #ffffff;
+          -ms-box-shadow          : inset 0px 0px 0px 5px #ffffff;
+          -webkit-box-shadow      : inset 0px 0px 0px 5px #ffffff;
+          box-shadow              : inset 0px 0px 0px 5px #ffffff;
+          -ms-transform           : scale(1.2,1.2);
+          -webkit-transform       : scale(1.2,1.2);
+          -moz-transform          : scale(1.2,1.2);
+          -o-transform            : scale(1.2,1.2);
+          transform               : scale(1.2,1.2);
+      }
+      .icon-circle  i:before{
+          margin-left         : 0px;
+          font-size           : 40px;
+      }
+      @media (min-width:320px) and (max-width:768px) {
+       .icon-circle .fa{
+          font-size           : 15px;
+          color               : #e84700;
+          margin              : 0 auto;
+          height              : 40px;
+          width               : 40px;
+          border-radius       : 50%;
+          border              :2px solid #e84700;
+          line-height         : 40px;
+          cursor              : pointer;
+          -webkit-transition  : all  ease-in-out 0.35s;
+          -moz-transition     : all  ease-in-out 0.35s;
+          -o-transition       : all  ease-in-out 0.35s;
+          -ms-transition      : all  ease-in-out 0.35s;
+          transition          : all  ease-in-out 0.20s,background-color ease-in-out 0.05s;
+      }
+        .icon-circle  .fa:hover{
+          background-color        : #e84700;
+          color                   : #fff;
+          border                  : 1px solid #e84711;
+          -moz-box-shadow         : inset 0px 0px 0px 5px #ffffff;
+          -o-box-shadow           : inset 0px 0px 0px 5px #ffffff;
+          -ms-box-shadow          : inset 0px 0px 0px 5px #ffffff;
+          -webkit-box-shadow      : inset 0px 0px 0px 5px #ffffff;
+          box-shadow              : inset 0px 0px 0px 5px #ffffff;
+          -ms-transform           : scale(1.2,1.2);
+          -webkit-transform       : scale(1.2,1.2);
+          -moz-transform          : scale(1.2,1.2);
+          -o-transform            : scale(1.2,1.2);
+          transform               : scale(1.2,1.2);
+      }
+      .icon-circle  i:before{
+          margin-center       : 0px;
+          font-size           : 10px;
+      }
+      }
+      .ifacebook .fa{
+          color               :#3B5998 alpha;
+          border              :2px solid #3B5998;
+      }
+      .ifacebook .fa:hover{
+          background-color        : #3B5998 alpha;
+          color                   : #fff;
+          border                  : 1px solid #3B5998;
+      }
+      .itwittter .fa{
+          color               : #33ccff alpha;
+          border              :2px solid #33ccff;
+      }
+      .itwittter .fa:hover{
+          background-color        : #33ccff alpha;
+          color                   : #fff;
+          border                  : 1px solid #33ccff;
+
+      }
+      .iinstagram .fa{
+          color               : #007bb7;
+          border              :2px solid #007bb7;
+      }
+
+      .iinstagram .fa:hover{
+          background-color        :#007bb7;
+          color                   : #fff;
+          border                  : 1px solid #007bb7;
+      }
+    </style>
   </head>
 
   <body>
-
-
     <div class = "container col-md-12">
+      <h1 class="welcome col-md-offset-2">Welcome to HORUS</h2>
         <div class="col-md-4">
-          </div>
+        </div>
       <div class="col-md-4">
           <form class="form-signin" action="https://api.instagram.com/oauth/authorize/?" method="GET">
-            <h2 class="form-signin-heading">Welcome to HORUS</h2>
-            <br>
-            <h4 class="form-signin-heading">Please sign in</h4>
+            <h4 class="form-signin-heading" style="font-style:Roboto;">Please sign in:</h4>
             <label for="inputEmail" class="sr-only">Email address</label>
             <input type="email" id="inputEmail" class="form-control" placeholder="Email address"  autofocus>
             <label for="inputPassword" class="sr-only">Password</label>
@@ -36,7 +161,17 @@
               </label>
             </div>
 
-            <input type="submit" class="btn-instagram" value="Sign in with Instagram" />
+            <div class="col-md-12 center">
+                <div class="icon-circle col-md-4">
+                  <a href="#" class="ifacebook" title="Facebook"><i class="fa fa-facebook"style="padding-left:20px;"></i></a>
+                </div>
+              <div class="icon-circle col-md-4">
+                  <a href="#" class="itwittter" title="Twitter"><i class="fa fa-twitter"style="padding-left:20px;"></i></a>
+              </div>
+              <div class="icon-circle col-md-4">
+                  <a href="#" class="iinstagram" title="Instagram"><i class="fa fa-instagram"style="padding-left:20px;"></i></a>
+              </div>
+           </div>
 
           </form>
     </div>
