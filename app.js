@@ -16,7 +16,8 @@ var url = require('url');
 var bodyParser = require('body-parser');
 var watson = require('watson-developer-cloud');
 var instagram = require('instagram-node').instagram();
-
+var TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
+var fs = require('fs');
 //var fs = require('fs');
 //var routes = require('../routes/index.js');
 
@@ -110,6 +111,24 @@ app.get('/posts', function(req, res) {
   res.render('pages/posts');
 });
 
+app.get('/speak', function(req, res) {
+  var text_to_speech = new TextToSpeechV1({
+    username: 'b189e628-3409-48f5-8020-c6baf9d417a3',
+    password: '7PjferYWBmOF'
+  });
+
+  var params = {
+    text: 'HI I am Jeffrey Sanchez',
+    voice: 'en-US_AllisonVoice', // Optional voice
+    accept: 'audio/wav'
+  };
+
+  // Pipe the synthesized text to a file
+  text_to_speech.synthesize(params).pipe(fs.createWriteStream('output.wav'));
+  console.log();
+
+  res.render('pages/index');
+});
 
 
 app.get('/loginsuccess4', function(req, res){
@@ -238,15 +257,22 @@ app.get('/feed', function(req, res, next){
         recogImg(url, function(data){
             console.log("FINAL CLASS"+data.images[0].classifiers[0].classes[0].class);
             iclass[i] = data.images[0].classifiers[0].classes[0].score;
-
+            console.log("ICLASS"+iclass[i]);
             data.attribution = data.images[0].classifiers[0];
             //data.attribution = data.images[0].classifiers[0].classes[0].class + " - " + data.images[0].classifiers[0].classes[0].score;
             //console.log(data);
         });
-        iclass.sort();
-        console.log(iclass);
+
+        //console.log(iclass);
 
       }
+
+      iclass.sort();
+      console.log("SORTED");
+      for(var i=0; i < iclass.length; i++){
+        console.log(JSON.stringify(iclass[i]));
+      }
+
       //console.log(json);
       return json;
       //console.log("RESULT ARRAY "+iclass);
