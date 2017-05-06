@@ -1,8 +1,8 @@
 applications:
 - services:
-#   Visual Recognition-0h
-  - Visual Recognition-2q
-  - Text to Speech-horus
+  - Visual Recognition-fg
+  - Text to Speech-fv
+  - Conversation-17
 - path: .
   memory: 256M
   instances: 1

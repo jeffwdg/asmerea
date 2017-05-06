@@ -1,7 +1,7 @@
 /*eslint-env node*/
 
 //------------------------------------------------------------------------------
-// node.js starter application for Bluemix
+// HORUS application
 //------------------------------------------------------------------------------
 
 //'use strict';
@@ -19,10 +19,8 @@ var instagram = require('instagram-node').instagram();
 var TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
 var fs = require('fs');
 //var fs = require('fs');
-//var routes = require('../routes/index.js');
 
 // cfenv provides access to your Cloud Foundry environment
-// for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
 
 // create a new express server
@@ -31,11 +29,10 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use('/public', express.static(process.cwd() + '/public'));
 app.set('view engine', 'ejs');
-//routes(app);
-//app.set('public', __dirname + '/public');
+
+
 // serve the files out of ./public as our main files
 app.set('views', __dirname + '/public/views');
-
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
@@ -52,26 +49,25 @@ instagram.use({
 */
 
 var text_to_speech = new TextToSpeechV1({
-  username: 'b189e628-3409-48f5-8020-c6baf9d417a3',
-  password: '7PjferYWBmOF'
+  username: '41e15cff-d972-4a5f-a52e-39d2a7b337b3',
+  password: '8MOlkv7ttq8V'
 });
 
-
 var visual_recognition = watson.visual_recognition({
-  api_key: '5cfe8a848c2360730df7c59678b0dc103cae7630', // '0aa92f543e38547ddc8ba9383caf4cba952dbb32',
+  api_key: '5bb5ab8768001a289d21219f73014b5f09483c08', //
   version: 'v3',
   version_date: '2016-05-20'
 });
 
 var instaImage ="https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/18252117_808607632624658_991581406024957952_n.jpg";
-//recognizeImage(instaImage, visual_recognition);
 
-
+var redirect_uri = 'https://horus.mybluemix.net/loginsuccess';
 // ================================================================
 // GET AND POSTS REQUESTS
 // ================================================================
 
-var redirect_uri = 'https://horus.mybluemix.net/loginsuccess';
+
+
 
 app.get('/', function(req, res) {
   console.log(req.query);
@@ -91,13 +87,9 @@ app.get('/posts', function(req, res) {
 });
 
 app.get('/speak', function(req, res) {
-  var text_to_speech = new TextToSpeechV1({
-    username: 'b189e628-3409-48f5-8020-c6baf9d417a3',
-    password: '7PjferYWBmOF'
-  });
 
   var params = {
-    text: 'HI I am Jeffrey Sanchez',
+    text: 'Hello. My name is Horus. What do you want to see today?',
     voice: 'en-US_AllisonVoice', // Optional voice
     accept: 'audio/wav'
   };
@@ -171,7 +163,7 @@ app.get('/feed', function(req, res, next){
     //Returns class of the image after recognition
     var getImgClass = function(url,callback) {
       //var url = "https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/18252117_808607632624658_991581406024957952_n.jpg";
-      console.log("URL"+url);
+      console.log(" RECOG URL"+url);
 
       var params = {
         url: url,
@@ -187,9 +179,9 @@ app.get('/feed', function(req, res, next){
           //res.images[0].classifiers[0].classes.sort();
           var score = res.images[0].classifiers[0].classes[0].score;
           var iclass = res.images[0].classifiers[0].classes[0].class;
-          console.log("SIZE"+res.images[0].classifiers[0].classes.length);
-          console.log("CLASS"+res.images[0].classifiers[0].classes[0].class);
-          console.log("SCORE"+res.images[0].classifiers[0].classes[0].score);
+          //console.log("SIZE"+res.images[0].classifiers[0].classes.length);
+          //console.log("CLASS"+res.images[0].classifiers[0].classes[0].class);
+          //console.log("SCORE"+res.images[0].classifiers[0].classes[0].score);
           //console.log("Images: "+JSON.stringify(res, null, 2));
           //console.log(res);
           callback(res);
@@ -221,48 +213,90 @@ app.get('/feed', function(req, res, next){
 
     function retResults(json){
 
-      console.log("Recognizing each posts of "+json.data.length);
-      var iclass=[];
-      var instaAudioText = [];
-      iclass.length = json.data.length;
+    var icolors = {
+      "brown":"which is similar to the earths natural color or some dead parts of things which grew out of the dirt from the earth",
+      "red":"which is similar to a skin sun burn and the color of your cheeks if you felt embarrassed and blushed.",
+      "orange":"which is similar as refreshing, sweet, and tropical",
+      "yellow":"which is when you feel the warmth from the rays of the sun and the smell of a field of sunflowers",
+      "green":"which feels like the smoothness and suppleness of the leaves; green feels like life. But when the leaves are crispy  like these other ones, they have turned brown and aren’t alive anymore.",
+      "blue":"which is similar when you feel you’re swimming in the water and the cool wetness of it feels relaxing",
+      "indigo":"which is hot, yet icy. Its intellectual, and very sexual, but frustrated too. Indigo appears in the sky at dawn and",
+      "dusk":"when the weather is beautiful but storms lie ahead way before we can feel it in the atmosphere",
+      "violet":"which is a type of color between hot and cool, red and blue. It gives a feeling as though it is between the heat of fire and the coldness of ice. If it were a smell, it would smell like burning wood that is floating on top of the ocean."
+    };
 
-       for(var i=0; i < json.data.length; i++){
+      var postAudio = "This post";
+
+      console.log("Recognizing each posts of "+json.data.length);
+      //var iclass=[];
+      var instaAudioText = [];
+      //iclass.length = json.data.length;
+      var jtype="text in a photo";
+      var jcaption = "Caption here";
+      var jlocation = "";
+      var taggedPeople = "";
+      var jlikect = "";
+      var jcommentct = "";
+      var ix;
+
+       for(i=0; i < json.data.length; i++){
         //console.log(json.data[i].images.standard_resolution.url);
         url = json.data[i].images.standard_resolution.url;
-        //iclass[i] = recognizeImage(json.data[i].images.standard_resolution.url);
+        console.log("OUTSIDE URL:"+url);
         recogImg(url, function(data){
-            console.log("FINAL CLASS"+data.images[0].classifiers[0].classes[0].class);
-            iclass[i] = JSON.stringify(data.images[0].classifiers[0].classes);
-            /*
-            instaAudioText[i] = "This post contains " + data.images[0].classifiers[0].classes[0].class + data.images[0].classifiers[0].classes[1].class + "Caption" + data.caption.text
-            + "The post has "+ data.likes.count + " Likes and " + data.comments.count + " comments";
-            createAudo(instaAudioText[i], "audio"+data.id);*/
-            //json.data[0].attribution = data.images[0].classifiers[0].classes
-            console.log("ICLASS"+ data.images[0].classifiers[0].classes);
-            data.attribution = data.images[0].classifiers[0];
-            //data.attribution = data.images[0].classifiers[0].classes[0].class + " - " + data.images[0].classifiers[0].classes[0].score;
-            //console.log(data);
+
+            for(ix=0; ix < json.data.length; ix++){
+
+              url = json.data[ix].images.standard_resolution.url;
+              console.log("INSIDE URL:"+url);
+              //console.log("FINAL CLASS"+data.images[0].classifiers[0].classes[0].class);
+              //  iclass[i] = JSON.stringify(data.images[ix].classifiers[ix].classes);
+              if(json.data[ix].type == "image"){ jtype="photo";}
+              if(json.data[ix].location == true){ jlocation= json.data[ix].location.name;} else{ jlocation="";}
+              if(json.data[ix].users_in_photo != "null"){ taggedPeople="";}
+              jlikect = json.data[ix].likes.count;
+              jcommentct = json.data[ix].comments.count;
+              jcaption = json.data[ix].caption.text.replace("#", "hashtag ");
+
+              var imageClasses = "";
+              var imageClassesFinal ="";
+              var iColor = [];
+              var colorPos=-1;
+              //console.log(JSON.stringify(jcaption+json.data[0].users_in_photo+json.data[0].location));
+              //console.log("CLASS LEN"+ data.images[0].classifiers[0].classes.length);
+              for(var e=0; e < data.images[0].classifiers[0].classes.length; e++){
+
+                  imageClassesFinal += JSON.stringify(data.images[0].classifiers[0].classes[e].class)+ ", ";
+                  if(imageClasses.search("color")){
+                    //colorPos = icolors.indexOf(imageClasses);
+                    //iColor[e] = imageClasses;
+                    console.log(imageClasses);
+                  }
+              }
+
+              //console.log(JSON.stringify(imageClasses));
+
+              instaAudioText[i] = "This post is a "+jtype +". It may contain "+imageClassesFinal+" Post Caption " +jcaption+" " +jlocation + "Tagged People " + taggedPeople + "Post contains colors: "+ jlikect + " Likes and "+jcommentct+ " comments."
+              console.log("SPEAKNOW"+instaAudioText[i]);
+
+              //instaAudioText[i] = data.images[0].classifiers[0].classes[0].class;
+              createAudo(instaAudioText[i], "audio"+json.data[ix].id);
+              //console.log(data);
+
+            }
+
         });
 
         //console.log(iclass);
 
       }
 
-      iclass.sort();
-      console.log("SORTED");
-      for(var i=0; i < iclass.length; i++){
-        console.log(JSON.stringify(iclass[i]));
-      }
 
       console.log(json);
       return json;
       //console.log("RESULT ARRAY "+iclass);
     }
 
-    /*Looping results of the recognition
-    for(var i=0; i < iclass.length; i++){
-           console.log("Results of the photo recognition class="+ iclass[i]);
-    } */
 
     //app.render('pages/posts', json);
     //res.setHeader('Content-Type', 'text/html');
@@ -275,12 +309,6 @@ app.get('/feed', function(req, res, next){
 
 });
 
-app.get('/recog', function(req, res) {
-  //recognizeImage(instaImage, visual_recognition);
-  console.log("recognizing image");
-  res.render('pages/rec');
-});
-
 
 /* Recognize an image */
 app.post('/rec',   function(req, res) {
@@ -289,26 +317,6 @@ app.post('/rec',   function(req, res) {
     url: url,
     images_file: null
   };
-
-/*
-  if (req.file) { // file image
-    params.images_file = fs.createReadStream(req.file.path);
-    console.log(req.file);
-  }
-
-  else if (req.body.url && req.body.url.indexOf('images') === 0) { // local image
-    params.images_file = fs.createReadStream(path.join('public', req.body.url));
-  } else if (req.body.image_data) {
-    // write the base64 image to a temp file
-    var resource = parseBase64Image(req.body.image_data);
-    var temp = path.join(os.tmpdir(), uuid.v1() + '.' + resource.type);
-    fs.writeFileSync(temp, resource.data);
-    params.images_file = fs.createReadStream(temp);
-  } else if (req.body.url) { // url
-    params.url = req.body.url;
-  } else { // malformed url
-    return res.status(400).json({ error: 'Malformed URL', code: 400 });
-  }*/
 
   //Detect images
   visual_recognition.classify(params, function(err, res) {
@@ -325,18 +333,18 @@ app.post('/rec',   function(req, res) {
   });
 
   //Detect faces
-  visual_recognition.detectFaces(params,
-  function(err, response) {
-    if (err)
-      console.log(err);
-    else
-      console.log("Faces: "+ res);
+  visual_recognition.detectFaces(params, function(err, response) {
+    if (err){
+        console.log(err);
+    }
+    else{
+      //console.log("Faces: "+ res);
+    }
+
   });
 
-
-
   function getdata(json){
-    console.log("data passed");
+    //console.log("data passed");
     //console.log(json);
     //res.setHeader('Content-Type', 'text/html');
     //res.send(JSON.stringify(json));
@@ -347,27 +355,21 @@ app.post('/rec',   function(req, res) {
 
 });
 
-
-
 // ================================================================
 // FUNCTIONS
 // ================================================================
 
 function createAudo(instatext, filename){
-
     var params = {
       text: instatext,
       voice: 'en-US_AllisonVoice', // Optional voice
       accept: 'audio/wav'
     };
-    var filename = "instaaudio";
+    //var filename = "instaaudio";
     // Pipe the synthesized text to a file
     text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/'+ filename+'.wav'));
     console.log();
-
 }
-
-
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {

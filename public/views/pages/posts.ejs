@@ -16,34 +16,32 @@
     <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">
       <i class="fa fa-remove"></i>
     </a>
-    <img src='<%= data[0].user.profile_picture %>' style="width:45%;" class="w3-round"><br><br>
-    <h4><b>@<%= data[0].user.username %></b></h4>
-    <p class="w3-text-grey"><%= data[0].user.full_name %></p>
+    <img src='<%= data[0].user.profile_picture %>' style="width:45%;" class="w3-round">
+    <a>@<%= data[0].user.username %> <span class="w3-text-grey"><%= data[0].user.full_name %></span> </a>
+
+  </div>
+  <div class="w3-panel w3-large">
+    <p onclick="viewPosts()"><i class="fa fa-th-large fa-fw w3-margin-right"></i>View Post<p>
+    <p id="showVideo" onclick="showVideo()" ><i class="fa fa-instagram w3-hover-opacity w3-margin-right"></i>Open Camera</p>
+    <p onclick="w3_close()"><i class="fa fa-snapchat w3-hover-opacity w3-margin-right"></i>Create Post</p>
   </div>
   <div class="w3-bar-block">
-    <a href="#" onclick="viewPosts1()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-th-large fa-fw w3-margin-right"></i>VIEW POST</a>
-    <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>CREATE POST</a>
-    <a href="#" id="showVideo" onclick="showVideo()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>OPEN CAMERA</a>
-    <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-envelope fa-fw w3-margin-right"></i>LOGOUT</a>
     <div id="videoCon" style="display:none;">
       <video id="video" autoplay>No video</video>
       <input type="button" value="Stop" onclick="stopVideo()" id="stopVideo">
     </div>
-
   </div>
   <audio controls>
   <source src="public/audio/output.wav" type="audio/wav">
       Your browser does not support the audio element.
   </audio>
-  <!--
-  <div class="w3-panel w3-large">
-    <i class="fa fa-facebook-official w3-hover-opacity"></i>
-    <i class="fa fa-instagram w3-hover-opacity"></i>
-    <i class="fa fa-snapchat w3-hover-opacity"></i>
-    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-    <i class="fa fa-twitter w3-hover-opacity"></i>
-    <i class="fa fa-linkedin w3-hover-opacity"></i>
-  </div> -->
+
+<!--
+  <a href="" onclick="viewPosts()" class="w3-bar-item w3-button w3-padding w3-text-teal">></i>VIEW POST</a>
+  <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>CREATE POST</a>
+  <a href="#" id="showVideo" onclick="showVideo()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>OPEN CAMERA</a>
+  <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-envelope fa-fw w3-margin-right"></i>LOGOUT</a>
+-->
 </nav>
 
 
@@ -73,8 +71,7 @@
     <section class="timeline">
       <div class="container">
           <% for(var i=0; i< data.length; i++) {  if(i%2==1){ var fadeLR = "js--fadeInLeft"; } else {fadeLR = "js--fadeInRight"; }  %>
-            <div class="timeline-item">
-
+            <div class="timeline-item" >
               <div class="timeline-img">
               </div>
               <div class="timeline-content timeline-card <%= fadeLR %>">
@@ -91,6 +88,11 @@
                   </button>
                   <button class="btn btn-primary" type="button">Comments <span class="badge"><%= data[i].comments.count %></span>
                   </button>
+                  <input type="hidden" class="postL" id="postList" value="<%= data[i].id %>">
+                  <audio id="postListAudio" class="plAudio" controls>
+                    <source src="public/audio/audio<%= data[i].id %>.wav" type="audio/wav">
+                    Your browser does not support the audio element.
+                  </audio>
                 </div>
 
               </div>
@@ -145,6 +147,24 @@
 </video>
 
 <script>
+function viewPosts(){
+
+  $("#plAudio" ).each(function() {
+    var x = document.getElementById("postListAudio");
+    console.log(x);
+    x.playAudio();
+  });
+
+}
+
+function playAudio() {
+    x.play();
+}
+
+function pauseAudio() {
+    x.pause();
+}
+
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 var  localStream;
 showVideo = function () {
