@@ -1,8 +1,10 @@
 applications:
 - services:
   - Visual Recognition-fg
-  - Text to Speech-fv
+#  - Text to Speech-fv
+  - Text to Speech-ba
   - Conversation-17
+  - Credentials-1
 - path: .
   memory: 256M
   instances: 1

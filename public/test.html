@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Example - Watson Text to Speech</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body>
+<div class="container">
+<a href="/">&laquo; Examples</a>
+
+<section>
+    <h2>Basic Text to Speech Example</h2>
+    <p><button id="button">Play Synthesized Text</button></p>
+</section>
+
+<script src="https://watson-speech.mybluemix.net/bower_components/watson-speech/dist/watson-speech.js"></script>
+<!-- window.fetch pollyfill for IE/Edge & Older Chrome/FireFox -->
+<script src="https://watson-speech.mybluemix.net/bower_components/fetch/fetch.js"></script>
+
+<h2>Code for this demo:</h2>
+<pre><code><script style="display: block;">
+// fetch the toke and create the audio element ahead of time
+var audio;
+var toke="p8SK0Xt%2Bo26CtSIGANokr%2F4xnuQhOCemjdjXkoN43KoRsK8DeuPzUYk%2B9FCLrGx%2Bg%2FyEQHbN9nSsWiwkU9aK8PSKO%2BOc0xhAVHnD8Zgl2sZxs%2BzkAbyd3JXg7KaPYtKXfQf8%2FKjPC%2FRfo8HVDvYFDQVYcQusA4oxhDyO7Mv2JUTTqz3UwAs5wZUEdlAx7zKLmgmXWrq7dyGYJhtGN%2Fucxx523dkHnLTRfPvNWtzT54AiBYfmrh7S6g9vBnXM4s1VuJb%2Bo5OdbD9fn%2FXxwIr%2BVMLLY17LFPXyFM4uEqv5OWpesh8Dg4RRjZ7S%2FPxaxHZMCcfvaRd5nVMWMN848T6SuCMN3P%2B%2BGSRXA8iigWHEKQXrOdtee%2Bh8N2x1csRW80wqViru%2Bfwjn69YQJc6G7J2swiNXp0HAxYWCZLNTE5UYz%2FYeu5xqcmr9zaP7xpjWXLCiN5rgHb7Kn2%2BibCEzMjuBOBc5dykrG7dO2po9oXnK4HDDMTLuWgLRM%2BZkJ8QfKE%2BGn6jqL4I6k%2FIb2duqtAaxlPv66Zq1LfIt%2BNaW8DzQMKbIMZMdM%2BcmC4rp3gcv6RdlMAu2nMFvrhz0gabg3Fg10TA2uPKYknRplDQbA95lrHukPylju7ydD9pwF2V0Yy4%2FuZOWrlfY%2BeCaOQEAq1LtASXs2TR0oODoQ49PNs6Yv18NC6QkVHY96FZyp3fvLo2zkF4i7PI9wK3OtgoJ91psV5Soo0tnZMZP2oL%2F%2BRSwvKHquwiyjKNFuwoyPM%2BHJuHgu5A8ETQH%2BNBIvbL5oGekCzk1m9SIoyayAJE%2BIPYvUpdm8ASlfL8Ey%2Bz78R7iqrPrrWSkd7GypLL%2FZJV0DFe812QcBnrsVGE20PF3JXxSWbinmci1svnJlfUc7liMZnBFsunvGVPUT0ZnKCrCjdCr4mc%2BgkOsuO1Az9q7Cm%2FJHrMYIVvSjDD6iEq%2BXlUuBh1u2Zt3tH%2FdFwjWJFVA6S%2BcChiW3QfEL";
+
+fetch('https://stream.watsonplatform.net/speech-to-text/api/v1/models?watson-token=')
+  .then(function(response) {
+    return response.text();
+  }).then(function (token) {
+    audio = WatsonSpeech.TextToSpeech.synthesize({
+      text: 'Hello from IBM Watson',
+      token: token,
+      autoPlay: false,
+      accept: 'audio/wav'
+    });
+
+    audio.on('error', function(err) {
+      console.log('audio error: ', err);
+    });
+  });
+document.querySelector('#button').onclick = function () {
+  audio.play();
+};
+</script></code></pre>
+</div>
+</body>
+</html>

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html>
-
+<html style="height:100%">
   <head>
-    <title>Asmerea</title>
+    <title>HORUS</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,173 +9,93 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
     <!-- BootStrap Start -->
-    <link rel="stylesheet"href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/my-styles.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <!-- BootStrap End -->
+<link rel="stylesheet" href="public/stylesheets/app.css">
+</head>
+  <body style="background-color: #3b4b54;
+  	width : 100%;
+  	height:100%;
 
-    <style>
-      body{
-        background-color: #fbfbfb;
-         padding: 50px;
-      }
-      .welcome{
-        margin: auto !important;
-        width: 50%;
-        padding: 50px;
-        font-family: "Monotype Corsiva",sans-serif;
-        font-size: 70px;
-        font-weight: 200;
-      }
-      .icon-circle .fa{
-          font-size           : 25px;
-          color               : grey;
-          margin              : 0 auto;
-          height              : 80px;
-          width               : 80px;
-          border-radius       : 50%;
-          border              :2px solid #e84700;
-          line-height         : 80px;
-          cursor              : pointer;
-          -webkit-transition  : all  ease-in-out 0.35s;
-          -moz-transition     : all  ease-in-out 0.35s;
-          -o-transition       : all  ease-in-out 0.35s;
-          -ms-transition      : all  ease-in-out 0.35s;
-          transition          : all  ease-in-out 0.20s,background-color ease-in-out 0.05s;
-      }
-      .icon-circle  .fa:hover{
-          background-color        : #e84700;
-          color                   : #fff;
-          border                  : 1px solid #e84711;
-          -moz-box-shadow         : inset 0px 0px 0px 5px #ffffff;
-          -o-box-shadow           : inset 0px 0px 0px 5px #ffffff;
-          -ms-box-shadow          : inset 0px 0px 0px 5px #ffffff;
-          -webkit-box-shadow      : inset 0px 0px 0px 5px #ffffff;
-          box-shadow              : inset 0px 0px 0px 5px #ffffff;
-          -ms-transform           : scale(1.2,1.2);
-          -webkit-transform       : scale(1.2,1.2);
-          -moz-transform          : scale(1.2,1.2);
-          -o-transform            : scale(1.2,1.2);
-          transform               : scale(1.2,1.2);
-      }
-      .icon-circle  i:before{
-          margin-left         : 0px;
-          font-size           : 40px;
-      }
-      @media (min-width:320px) and (max-width:768px) {
-       .icon-circle .fa{
-          font-size           : 15px;
-          color               : #e84700;
-          margin              : 0 auto;
-          height              : 40px;
-          width               : 40px;
-          border-radius       : 50%;
-          border              :2px solid #e84700;
-          line-height         : 40px;
-          cursor              : pointer;
-          -webkit-transition  : all  ease-in-out 0.35s;
-          -moz-transition     : all  ease-in-out 0.35s;
-          -o-transition       : all  ease-in-out 0.35s;
-          -ms-transition      : all  ease-in-out 0.35s;
-          transition          : all  ease-in-out 0.20s,background-color ease-in-out 0.05s;
-      }
-        .icon-circle  .fa:hover{
-          background-color        : #e84700;
-          color                   : #fff;
-          border                  : 1px solid #e84711;
-          -moz-box-shadow         : inset 0px 0px 0px 5px #ffffff;
-          -o-box-shadow           : inset 0px 0px 0px 5px #ffffff;
-          -ms-box-shadow          : inset 0px 0px 0px 5px #ffffff;
-          -webkit-box-shadow      : inset 0px 0px 0px 5px #ffffff;
-          box-shadow              : inset 0px 0px 0px 5px #ffffff;
-          -ms-transform           : scale(1.2,1.2);
-          -webkit-transform       : scale(1.2,1.2);
-          -moz-transform          : scale(1.2,1.2);
-          -o-transform            : scale(1.2,1.2);
-          transform               : scale(1.2,1.2);
-      }
-      .icon-circle  i:before{
-          margin-center       : 0px;
-          font-size           : 10px;
-      }
-      }
-      .ifacebook .fa{
-          color               :#3B5998 alpha;
-          border              :2px solid #3B5998;
-      }
-      .ifacebook .fa:hover{
-          background-color        : #3B5998 alpha;
-          color                   : #fff;
-          border                  : 1px solid #3B5998;
-      }
-      .itwittter .fa{
-          color               : #33ccff alpha;
-          border              :2px solid #33ccff;
-      }
-      .itwittter .fa:hover{
-          background-color        : #33ccff alpha;
-          color                   : #fff;
-          border                  : 1px solid #33ccff;
+  	margin: 0 auto;
+  	color: #ffffff;">
+          <div id="view-change-button" class="button" onclick="PayloadPanel.togglePanel(event, this)" style="display:none;">
+            <img class="option full" src="public/images/Chat Button.png">
+            <img class="option not-full" src="public/images/Code Button.png">
+          </div>
+          <div id="contentParent" class="responsive-columns-wrapper">
+            <div id="chat-column-holder" class="responsive-column content-column">
 
-      }
-      .iinstagram .fa{
-          color               : #007bb7;
-          border              :2px solid #007bb7;
-      }
+              <div class="chat-column">
+                <div id="scrollingChat"></div>
 
-      .iinstagram .fa:hover{
-          background-color        :#007bb7;
-          color                   : #fff;
-          border                  : 1px solid #007bb7;
-      }
-    </style>
-  </head>
+                <div>
+                  <a href="#" onclick="">
+                  <img id="horusmic" class="option full" src="public/images/mic.png"  >
+                </a>
 
-  <body>
-    <div class = "container col-md-12">
-      <h1 class="welcome col-md-offset-2 text-center">Welcome to HORUS</h2>
-        <div class="col-md-4">
-        </div>
-      <div class="col-md-4">
-          <form class="form-signin" action="https://api.instagram.com/oauth/authorize/?" method="GET">
-            <h4 class="form-signin-heading" style="font-style:Roboto;">Please sign in:</h4>
-            <label for="inputEmail" class="sr-only">Email address</label>
-            <input type="email" id="inputEmail" class="form-control" placeholder="Email address"  autofocus>
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password"  >
-           <input type="hidden" name="redirect_uri" class="form-control" value="https://horus.mybluemix.net/loginsuccess"  >
-           <input type="hidden" name="client_id" class="form-control"    value="4d4215dd28de4c0fbcc1c4aa8366a926" >
-           <input type="hidden" name="response_type" class="form-control" value="token">
-           <input type="hidden" id="access_token" class="form-control" value="" >
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" value="remember-me"> Remember me
-              </label>
-            </div>
-
-            <div class="col-md-12 center">
-                <div class="icon-circle col-md-4">
-                  <a href="#" class="ifacebook" title="Facebook"><i class="fa fa-facebook"style="padding-left:20px; opacity: 0.5; filter: alpha(opacity=50);"></i></a>
                 </div>
-                <div class="icon-circle col-md-4">
-                  <a href="https://api.instagram.com/oauth/authorize/?client_id=4d4215dd28de4c0fbcc1c4aa8366a926&redirect_uri=https://horus.mybluemix.net/loginsuccess&response_type=code" class="iinstagram" title="Instagram"><i class="fa fa-instagram"style="padding-left:20px; "></i></a>
-                </div>
-              <div class="icon-circle col-md-4">
-                  <a href="#" class="itwittter" title="Twitter"><i class="fa fa-twitter"style="padding-left:20px; opacity: 0.5; filter: alpha(opacity=50);"></i></a>
+                <label for="textInput" class="inputOutline">
+                  <input id="textInput" class="input responsive-column"
+                    placeholder="Type something" type="text"
+                    onkeydown="ConversationPanel.inputKeyDown(event, this)">
+                </label>
+
               </div>
+                <div class="col-md-4">
+                </div>
+              <div class="col-md-4">
+                  <form class="form-signin" action="https://api.instagram.com/oauth/authorize/?" method="GET">
 
-           </div>
+                   <input type="hidden" name="redirect_uri" class="form-control" value="https://horus.mybluemix.net/loginsuccess"  >
+                   <input type="hidden" name="client_id" class="form-control"    value="4d4215dd28de4c0fbcc1c4aa8366a926" >
+                   <input type="hidden" name="response_type" class="form-control" value="token">
+                   <input type="hidden" id="access_token" class="form-control" value="" >
+                    <div class="col-md-12 center">
+                        <div class="icon-circle col-md-4">
+                          <a href="#" class="ifacebook" title="Facebook"><i class="fa fa-facebook"style="padding-left:20px; opacity: 0.5; filter: alpha(opacity=50);"></i></a>
+                        </div>
+                        <div class="icon-circle col-md-4">
+                        <!--  <a href="https://api.instagram.com/oauth/authorize/?client_id=4d4215dd28de4c0fbcc1c4aa8366a926&redirect_uri=https://horus.mybluemix.net/loginsuccess&response_type=code" class="iinstagram" title="Instagram"><i class="fa fa-instagram"style="padding-left:20px; "></i></a>
+                        -->
+                        <a href="/feed" class="iinstagram" title="Instagram"><i class="fa fa-instagram"style="padding-left:20px; "></i></a>
+                      </div>
+                      <div class="icon-circle col-md-4">
+                          <a href="#" class="itwittter" title="Twitter"><i class="fa fa-twitter"style="padding-left:20px; opacity: 0.5; filter: alpha(opacity=50);"></i></a>
+                      </div>
 
-          </form>
+                   </div>
+
+                  </form>
+            </div>
+            <div id="payload-column" class="fixed-column content-column" style="display:none;">
+              <div id="payload-initial-message">
+                Type something to see the output
+              </div>
+              <div id="payload-request" class="payload"></div>
+              <div id="payload-response" class="payload"></div>
+            </div>
+          </div>
     </div>
+
     </div>
+    <audio controls autoplay="" style="display:none;">
+      <source src="public/audio/output.wav" type="audio/wav">
+          Your browser does not support the audio element.
+      </audio>
+
+    <script src="public/js/common.js"></script>
+    <script src="public/js/api.js"></script>
+    <script src="public/js/conversation.js"></script>
+    <script src="public/js/payload.js"></script>
+    <script src="public/js/global.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>

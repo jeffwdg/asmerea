@@ -48,27 +48,7 @@ $(function(){
 
 });
 
-function viewPosts(){
-alert("Viewing posts now.");
  
-
-        $.ajax({
-            url: '/rec',
-            //data: message,
-            type: 'POST',
-            dataType: 'html',
-            success: function (response, textStatus, jqXHR) {
-            console.log("Q"+response);
-            alert(response);
-            //response = JSON.parse(response);
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-          },
-        });
-
-}
-
-
 function w3_open() {
     document.getElementById("mySidebar").style.display = "block";
     document.getElementById("myOverlay").style.display = "block";

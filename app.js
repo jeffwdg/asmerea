@@ -4,12 +4,13 @@
 // HORUS application
 //------------------------------------------------------------------------------
 
-//'use strict';
+'use strict';
 // This application uses express as its web server
 // for more info, see: http://expressjs.com
 // ================================================================
 // REQUIRES
 // ================================================================
+require('dotenv').config({silent: true});
 var express = require('express');
 var request = require('request');
 var url = require('url');
@@ -17,7 +18,10 @@ var bodyParser = require('body-parser');
 var watson = require('watson-developer-cloud');
 var instagram = require('instagram-node').instagram();
 var TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
+var Conversation = require('watson-developer-cloud/conversation/v1'); // watson sdk
 var fs = require('fs');
+var Sound = require('node-aplay');
+var play = require('play');
 //var fs = require('fs');
 
 // cfenv provides access to your Cloud Foundry environment
@@ -47,16 +51,40 @@ instagram.use({
   client_secret: '84f0af4d4c5244eeaed53aeb2c1cfc21'
 });
 */
+// Create the service wrapper
+var conversation = new Conversation({
+  // If unspecified here, the CONVERSATION_USERNAME and CONVERSATION_PASSWORD env properties will be checked
+  // After that, the SDK will fall back to the bluemix-provided VCAP_SERVICES environment property
+  username: '0a1a7038-1fde-4c1f-81a8-ea789ca0cef1',
+  password: '1C5VUt3XUvXf',
+  url: 'https://gateway.watsonplatform.net/conversation/api',
+  version_date: '2016-10-21',
+  version: 'v1'
+});
 
 var text_to_speech = new TextToSpeechV1({
-  username: '41e15cff-d972-4a5f-a52e-39d2a7b337b3',
-  password: '8MOlkv7ttq8V'
+  username: 'd6db4a69-211e-4a53-9c84-00f602bbad48',
+  password: 'IXTjieLw0Qdz'
 });
 
 var visual_recognition = watson.visual_recognition({
   api_key: '5bb5ab8768001a289d21219f73014b5f09483c08', //
   version: 'v3',
   version_date: '2016-05-20'
+});
+
+var authorization = new watson.AuthorizationV1({
+  username: 'd6db4a69-211e-4a53-9c84-00f602bbad48',
+  password: 'IXTjieLw0Qdz',
+  url: watson.TextToSpeechV1.URL
+});
+
+authorization.getToken(function (err, token) {
+  if (!token) {
+    console.log('error:', err);
+  } else {
+    console.log("TOKEN"+token);
+  }
 });
 
 var instaImage ="https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/18252117_808607632624658_991581406024957952_n.jpg";
@@ -73,6 +101,12 @@ app.get('/', function(req, res) {
   console.log(req.query);
   //res.send(req.url+req.query+req.params;
   res.render('pages/index');
+
+});
+
+app.get('/chat', function(req, res) {
+
+  res.render('index');
 
 });
 
@@ -95,7 +129,7 @@ app.get('/speak', function(req, res) {
   };
 
   // Pipe the synthesized text to a file
-  text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/output.wav'));
+  text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/hello.wav'));
   console.log();
 
   res.render('pages/index');
@@ -180,7 +214,7 @@ app.get('/feed', function(req, res, next){
           var score = res.images[0].classifiers[0].classes[0].score;
           var iclass = res.images[0].classifiers[0].classes[0].class;
           //console.log("SIZE"+res.images[0].classifiers[0].classes.length);
-          //console.log("CLASS"+res.images[0].classifiers[0].classes[0].class);
+          console.log("CLASS"+res.images[0].classifiers[0].classes[0].class);
           //console.log("SCORE"+res.images[0].classifiers[0].classes[0].score);
           //console.log("Images: "+JSON.stringify(res, null, 2));
           //console.log(res);
@@ -237,18 +271,17 @@ app.get('/feed', function(req, res, next){
       var taggedPeople = "";
       var jlikect = "";
       var jcommentct = "";
-      var ix;
+      var i;
 
        for(i=0; i < json.data.length; i++){
         //console.log(json.data[i].images.standard_resolution.url);
         url = json.data[i].images.standard_resolution.url;
         console.log("OUTSIDE URL:"+url);
+
         recogImg(url, function(data){
 
-            for(ix=0; ix < json.data.length; ix++){
+            for(var ix=json.data.length-1; ix >=0; ix--){
 
-              url = json.data[ix].images.standard_resolution.url;
-              console.log("INSIDE URL:"+url);
               //console.log("FINAL CLASS"+data.images[0].classifiers[0].classes[0].class);
               //  iclass[i] = JSON.stringify(data.images[ix].classifiers[ix].classes);
               if(json.data[ix].type == "image"){ jtype="photo";}
@@ -256,8 +289,7 @@ app.get('/feed', function(req, res, next){
               if(json.data[ix].users_in_photo != "null"){ taggedPeople="";}
               jlikect = json.data[ix].likes.count;
               jcommentct = json.data[ix].comments.count;
-              jcaption = json.data[ix].caption.text.replace("#", "hashtag ");
-
+              jcaption = json.data[ix].caption.text.replace("#", " hashtag ");
               var imageClasses = "";
               var imageClassesFinal ="";
               var iColor = [];
@@ -267,11 +299,11 @@ app.get('/feed', function(req, res, next){
               for(var e=0; e < data.images[0].classifiers[0].classes.length; e++){
 
                   imageClassesFinal += JSON.stringify(data.images[0].classifiers[0].classes[e].class)+ ", ";
-                  if(imageClasses.search("color")){
-                    //colorPos = icolors.indexOf(imageClasses);
-                    //iColor[e] = imageClasses;
-                    console.log(imageClasses);
-                  }
+                  //if(imageClasses.search("color")){
+                  //colorPos = icolors.indexOf(imageClasses);
+                  //iColor[e] = imageClasses;
+                  //console.log(imageClasses);
+                  //}
               }
 
               //console.log(JSON.stringify(imageClasses));
@@ -280,7 +312,7 @@ app.get('/feed', function(req, res, next){
               console.log("SPEAKNOW"+instaAudioText[i]);
 
               //instaAudioText[i] = data.images[0].classifiers[0].classes[0].class;
-              createAudo(instaAudioText[i], "audio"+json.data[ix].id);
+              createAudio(instaAudioText[i], "audio"+ix);
               //console.log(data);
 
             }
@@ -300,7 +332,7 @@ app.get('/feed', function(req, res, next){
 
     //app.render('pages/posts', json);
     //res.setHeader('Content-Type', 'text/html');
-    //res.send(JSON.stringify(json));
+    //res.send(json);
     res.render('pages/posts', json);
 
     console.log("end");
@@ -355,20 +387,147 @@ app.post('/rec',   function(req, res) {
 
 });
 
+
+// SEND MESSAGE TO CONVERSATION
+// Endpoint to be call from the client side
+app.post('/api/message', function(req, res) {
+  var workspace = process.env.WORKSPACE_ID || '00a10fb7-60bf-4ee3-9b68-e0a827bfa268';
+  if (!workspace || workspace === '<workspace-id>') {
+    return res.json({
+      'output': {
+        'text': 'The app has not been configured with a <b>WORKSPACE_ID</b> environment variable. Please refer to the ' + '<a href="https://github.com/watson-developer-cloud/conversation-simple">README</a> documentation on how to set this variable. <br>' + 'Once a workspace has been defined the intents may be imported from ' + '<a href="https://github.com/watson-developer-cloud/conversation-simple/blob/master/training/car_workspace.json">here</a> in order to get a working application.'
+      }
+    });
+  }
+
+    var payload = {
+    workspace_id: workspace,
+    context: req.body.context || {},
+    input: req.body.input || {}
+    };
+
+    // Send the input to the conversation service
+    conversation.message(payload, function(err, data) {
+    if (err) {
+      return res.status(err.code || 500).json(err);
+    }
+    console.log("SENDING MESSAGE");
+    console.log(data);
+
+      console.log("TXT"+data.output.text[0]);
+      //Synthesizing output text for play
+
+      console.log("INTENT"+data.intent);
+      //console.log("INTENT"+data.input.text);
+
+      if(data.intents != ""){
+        console.log(data.intents[0].intent);
+        // Check for action flags.
+        if(data.intents[0].intent == "ViewPost") {
+          // User asked what time it is, so we output the local system time.
+
+          console.log('Viewing Post...');
+
+        }else if(data.intents[0].intent == "CreatePost") {
+            // User asked what time it is, so we output the local system time.
+            //new Sound('https://horus.mybluemix.net/public/audio/output.wav').play();
+            console.log('Creating Post...');
+
+
+          }
+      }
+
+      if(data.output.text == "wiew post") {
+          // User asked what time it is, so we output the local system time.
+          console.log('Viewing Post...');
+      }
+      else if (data.output.action === 'end_conversation') {
+        // User said goodbye, so we're done.
+        console.log(data.output.text[0]);
+        endConversation = true;
+      } else {
+        // Display the output from dialog, if any.
+      }
+
+      res.json(updateMessage(payload, (data)));
+  });
+
+
+});
+
+
+/**
+ * Updates the response text using the intent confidence
+ * @param  {Object} input The request to the Conversation service
+ * @param  {Object} response The response from the Conversation service
+ * @return {Object}          The response with the updated message
+ */
+function updateMessage(input, response) {
+  console.log("UPDATE MESSAGE");
+  var responseText = null;
+  //console.log(input);
+  console.log("Creating audio");
+  var horusaudio = response.output.text[0].replace(/\s/g, '_');
+  horusaudio = horusaudio.replace('?', '');
+  console.log(horusaudio);
+  var d = createAudio(response.output.text[0], horusaudio);
+  if(d){
+    console.log("Try play audio");
+    try{
+      play.sound('public/audio/'+horusaudio+'.wav');
+    }catch(err){
+      console.log("Error playing audio");
+    }
+  }
+
+  if (!response.output) {
+    response.output = {};
+    console.log(response.output);
+  } else {
+    return response;
+  }
+
+  if (response.intents && response.intents[0]) {
+    var intent = response.intents[0];
+    // Depending on the confidence of the response the app can return different messages.
+    // The confidence will vary depending on how well the system is trained. The service will always try to assign
+    // a class/intent to the input. If the confidence is low, then it suggests the service is unsure of the
+    // user's intent . In these cases it is usually best to return a disambiguation message
+    // ('I did not understand your intent, please rephrase your question', etc..)
+    if (intent.confidence >= 0.75) {
+      responseText = 'I understood your intent was ' + intent.intent;
+    } else if (intent.confidence >= 0.5) {
+      responseText = 'I think your intent was ' + intent.intent;
+    } else {
+      responseText = 'I did not understand your intent';
+    }
+  }
+
+
+
+  response.output.text = responseText;
+  return response;
+}
 // ================================================================
 // FUNCTIONS
 // ================================================================
 
-function createAudo(instatext, filename){
+function createAudio(instatext, filename){
     var params = {
       text: instatext,
-      voice: 'en-US_AllisonVoice', // Optional voice
+      voice: 'en-US_MichaelVoice', // Optional voice
       accept: 'audio/wav'
     };
-    //var filename = "instaaudio";
-    // Pipe the synthesized text to a file
-    text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/'+ filename+'.wav'));
-    console.log();
+    try{
+      //var filename = "instaaudio";
+      // Pipe the synthesized text to a file
+      text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/'+ filename+'.wav'));
+
+    }catch(err){
+      console.log("Error dito mga besh");
+
+    }
+
 }
 
 // start server on the specified port and binding host
