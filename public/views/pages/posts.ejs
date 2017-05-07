@@ -11,7 +11,7 @@
 <body class="w3-light-grey w3-content" style="max-width:1600px">
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;   width: 35%; min-width: 500px;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="    z-index: 3;  width: 30%;  max-width: 500px;  min-width: 300px;  display: block;" id="mySidebar"><br>
   <div class="w3-container">
     <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">
       <i class="fa fa-remove"></i>
@@ -32,21 +32,47 @@
       <video id="video" autoplay>No video</video>
       <input type="button" value="Stop" onclick="stopVideo()" id="stopVideo">
     </div>
+
+
   </div>
 <style>
 #scrollingChat{
   height:450px !important;
   max-height: 500px;
 }
+.form-signin{
+  display:none;
+}
 </style>
 
   <% include ../pages/index %>
+  <div style="height: 40px;
+width: 40px;
+background: rgb(225, 65, 65) none repeat scroll 0% 0%;
+border: 1px solid rgb(255, 223, 223);
+border-radius: 50%;
+text-align: center;
+padding: 4px;">
+      <a href="#" onclick="stopAudio()">
+        <img height="20px" class="option full" alt="Pause/Stop" src="public/images/mic.png">
+      </a>
 
-<audio controls>
+</div>
+  <audio id="audio" preload="auto" tabindex="0" controls="" type="audio/wav" style="display:none;">
   <source src="public/audio/output.wav" type="audio/wav">
       Your browser does not support the audio element.
   </audio>
-<!--  
+
+  <ul id="playlist">
+      <li class="active"><a href="public/audio/output.wav">Hello My name is Horus</a></li>
+      <% for(var i=0; i< data.length; i++) {  %>
+          <li><a href="public/audio/audio<%= data[i].id %>.wav">  <p><%= data[i].caption.text %></p></a></li>
+      <% } %>
+  </ul>
+  <!--  <li><a href="audio/audio1426879371532218745_4338235068.wav">Moonlight Sonata - Beethoven</a></li>
+    <li><a href="audio/audio1430312793286085468_4338235068.wav">Canon in D Pachabel</a></li>
+    <li><a href="audio/audio1426889306898757399_4338235068.wav">Canon in D Pachabel</a></li>-->
+<!--
 
   <a href="" onclick="viewPosts()" class="w3-bar-item w3-button w3-padding w3-text-teal">></i>VIEW POST</a>
   <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>CREATE POST</a>
@@ -60,7 +86,7 @@
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:550px">
+<div class="w3-main" style="margin-left:470px">
 
   <!-- Header -->
   <header id="portfolio">
@@ -99,17 +125,14 @@
                   </button>
                   <button class="btn btn-primary" type="button">Comments <span class="badge"><%= data[i].comments.count %></span>
                   </button>
-                  <input type="hidden" class="postL" id="postList" value="<%= data[i].id %>">
-                  <audio id="postListAudio" class="plAudio" controls>
-                    <source src="public/audio/audio<%= data[i].id %>.wav" type="audio/wav">
-                    Your browser does not support the audio element.
-                  </audio>
+                  <input type="hidden" class="postL" id="postList<%= data[i].id %>" value="<%= data[i].id %>">
                 </div>
 
               </div>
 
             </div>
             <% } %>
+
 
       </div>
     </section>
@@ -134,33 +157,71 @@
 <video autoplay>
 </video>
 
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js"></script>
+  <script src="public/js/animation.js"></script>
+
+
 <script>
-function viewPosts(){
 
-  $('.postdetail input').each(function() {
-     console.log($(this).val());
-     var au = $(this).val();
-     var audioElement = document.createElement('audio');
-     audioElement.setAttribute('src', 'public/audio/audio'+au+'.wav');
-     audioElement.load();
-     audioElement.addEventListener("load", function() {
-       audioElement.play();
-       //$(".duration span").html(audioElement.duration);
-       //$(".filename span").html(audioElement.src);
-     }, true);
 
-  });
+var audio;
+var playlist;
+var tracks;
+var current;
+
+init();
+
+function init(){
+  console.log("Init activated");
+ current = 0;
+ audio = $('audio');
+ playlist = $('#playlist');
+ tracks = playlist.find('li a');
+ len = tracks.length;
+ console.log("# of Tracks"+len);
+ audio[0].volume = .50;
+ audio[0].play();
+
+ playlist.find('a').click(function(e){
+    console.log("Find audio");
+     e.preventDefault();
+     link = $(this);
+     current = link.parent().index();
+     run(link, audio[0]);
+ });
+
+ audio[0].addEventListener('ended',function(e){
+     current++;
+     if(current == len){
+         current = 0;
+         link = playlist.find('a')[0];
+     }else{
+         link = playlist.find('a')[current];
+     }
+     run($(link),audio[0]);
+ });
 
 
 }
 
-function playAudio() {
-    x.play();
+function run(link, player){
+     player.src = link.attr('href');
+     par = link.parent();
+     par.addClass('active').siblings().removeClass('active');
+     audio[0].load();
+     audio[0].play();
 }
 
-function pauseAudio() {
-    x.pause();
+function stopAudio(){
+  audio = $('audio');
+  audio.pause();
+  audio.currentTime = 0;
 }
+
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 var  localStream;
@@ -190,13 +251,9 @@ stopVideo = function () {
    console.log(localStream.getVideoTracks());
    localStream.stop();
 }
+
+
 </script>
-<script
-  src="https://code.jquery.com/jquery-3.2.1.js"
-  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-  crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js"></script>
-  <script src="public/js/animation.js"></script>
 
 </body>
 </html>

@@ -20,8 +20,8 @@ var instagram = require('instagram-node').instagram();
 var TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1');
 var Conversation = require('watson-developer-cloud/conversation/v1'); // watson sdk
 var fs = require('fs');
-var Sound = require('node-aplay');
 var play = require('play');
+var sanitizer = require('sanitizer');
 //var fs = require('fs');
 
 // cfenv provides access to your Cloud Foundry environment
@@ -83,7 +83,7 @@ authorization.getToken(function (err, token) {
   if (!token) {
     console.log('error:', err);
   } else {
-    console.log("TOKEN"+token);
+    //console.log("TOKEN"+token);
   }
 });
 
@@ -123,13 +123,13 @@ app.get('/posts', function(req, res) {
 app.get('/speak', function(req, res) {
 
   var params = {
-    text: 'Hello. My name is Horus. What do you want to see today?',
+    text: "Reading posts now",
     voice: 'en-US_AllisonVoice', // Optional voice
     accept: 'audio/wav'
   };
 
   // Pipe the synthesized text to a file
-  text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/hello.wav'));
+  text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/read.wav'));
   console.log();
 
   res.render('pages/index');
@@ -175,7 +175,8 @@ app.get('/loginsuccess4', function(req, res){
 });
 
 app.get('/feed', function(req, res, next){
-  var url = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=1378545447.4d4215d.b9522a4927564793b88828b33a32c4e3&count=5';
+  //1378545447.4d4215d.b9522a4927564793b88828b33a32c4e3
+  var url = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=4338235068.1677ed0.72300c4ff96c4f5bb633752359cc4dc4&count=5';
   var jsodata;
 
   request({url: url , json: true}, function(err, res, json) {
@@ -298,22 +299,23 @@ app.get('/feed', function(req, res, next){
               //console.log("CLASS LEN"+ data.images[0].classifiers[0].classes.length);
               for(var e=0; e < data.images[0].classifiers[0].classes.length; e++){
 
-                  imageClassesFinal += JSON.stringify(data.images[0].classifiers[0].classes[e].class)+ ", ";
+                  imageClassesFinal += JSON.stringify(data.images[0].classifiers[0].classes[e].class)+ " ";
                   //if(imageClasses.search("color")){
                   //colorPos = icolors.indexOf(imageClasses);
                   //iColor[e] = imageClasses;
                   //console.log(imageClasses);
                   //}
               }
-
               //console.log(JSON.stringify(imageClasses));
 
-              instaAudioText[i] = "This post is a "+jtype +". It may contain "+imageClassesFinal+" Post Caption " +jcaption+" " +jlocation + "Tagged People " + taggedPeople + "Post contains colors: "+ jlikect + " Likes and "+jcommentct+ " comments."
+              instaAudioText[i] = "This post is a "+jtype +". It may contain "+imageClassesFinal+" Post Caption " +jcaption+" " +jlocation + "Tagged People " + taggedPeople + jlikect + " Likes and "+jcommentct+ " comments."
               console.log("SPEAKNOW"+instaAudioText[i]);
+              var instaText = sanitizer.escape(instaAudioText[i]);
+              console.log("CLEAN"+instaText);
 
               //instaAudioText[i] = data.images[0].classifiers[0].classes[0].class;
-              createAudio(instaAudioText[i], "audio"+ix);
-              //console.log(data);
+              createAudio(instaText, "audio"+json.data[ix].id);
+              //console.log(json.data[ix].id);
 
             }
 
@@ -324,7 +326,7 @@ app.get('/feed', function(req, res, next){
       }
 
 
-      console.log(json);
+      //console.log(json);
       return json;
       //console.log("RESULT ARRAY "+iclass);
     }
@@ -467,18 +469,21 @@ function updateMessage(input, response) {
   var responseText = null;
   //console.log(input);
   console.log("Creating audio");
-  var horusaudio = response.output.text[0].replace(/\s/g, '_');
-  horusaudio = horusaudio.replace('?', '');
-  console.log(horusaudio);
-  var d = createAudio(response.output.text[0], horusaudio);
-  if(d){
+
+//  if(response.output.text[0] == "") {response.output.text[0]= "Blank text here"; }
+//  var horusaudio = response.output.text[0].replace(/\s/g, '_');
+//  horusaudio = horusaudio.replace('?', '');
+//  console.log(horusaudio);
+
+  //var d = createAudio(response.output.text[0], horusaudio);
+  /*if(d){
     console.log("Try play audio");
     try{
       play.sound('public/audio/'+horusaudio+'.wav');
     }catch(err){
       console.log("Error playing audio");
     }
-  }
+  }*/
 
   if (!response.output) {
     response.output = {};
@@ -503,8 +508,6 @@ function updateMessage(input, response) {
     }
   }
 
-
-
   response.output.text = responseText;
   return response;
 }
@@ -513,20 +516,21 @@ function updateMessage(input, response) {
 // ================================================================
 
 function createAudio(instatext, filename){
+    if(instatext == ""){console.log("No Text"); instatext="Text missing for audio Synthesizing";}
+
+
     var params = {
       text: instatext,
-      voice: 'en-US_MichaelVoice', // Optional voice
+      voice: 'en-US_AllisonVoice', // Optional voice
       accept: 'audio/wav'
     };
-    try{
+
+    console.log("Creating audio  now");
       //var filename = "instaaudio";
       // Pipe the synthesized text to a file
       text_to_speech.synthesize(params).pipe(fs.createWriteStream('public/audio/'+ filename+'.wav'));
 
-    }catch(err){
-      console.log("Error dito mga besh");
 
-    }
 
 }
 

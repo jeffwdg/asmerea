@@ -5,7 +5,7 @@ header { background: #fff; }
 header p { font-family: 'Roboto', sans-serif; color: rgba(255, 255, 255, 0.2); margin-bottom: 0; font-size: 60px; margin-top: -30px; }
 .timeline { position: relative; }
 .timeline::before { content: ''; background: #C5CAE9; width: 5px; height: 95%; position: absolute; left: 50%; transform: translateX(-50%); }
- .timeline-item {width: 85%;  margin-bottom: 70px;  margin-left: 17px;} .timeline-item:nth-child(even)
+ .timeline-item {width: 85%;  margin-bottom: 70px;  margin-left: 57px;} .timeline-item:nth-child(even)
 .timeline-content { float: right; padding: 40px 30px 10px 30px; }
 .timeline-item:nth-child(even)
 .timeline-content .date { right: auto; left: 0; }

@@ -7,12 +7,14 @@ It designed to help people with low vision to be able to connect with friends an
 such as Instagram, Facebook, Twitter and more.
 
 As an MVP, the team picked Instragram to analyze photo posts for users.
-Features
-- Photo Description, Color Tagging
-- Voice Activated Commands
-- Photo Capture Recognition
-- Conversation
 
+Features
+- Instragram sign in, fetch user posts
+- Visual recognition of posts and text-to-speech conversation for listening
+- Voice activated intents or commands using Speech-to-Text and Conversation service
+- Photo recognition through Video capture
+- Addition of word recognition in photos with text and color recognition for
+the blind users to get a feel of the color of the photo while describing how each color feels like
 
 [![Run application](horus.mybluemix.net/feed)
 
